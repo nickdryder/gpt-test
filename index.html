@@ -90,19 +90,27 @@
             const userMessage = inputField.value.trim();
             if (!userMessage) return;
 
-            addMessage(userMessage, 'user');
-            inputField.value = '';
+                  try {
+            // Replace 'apikeyhere' with your actual API key
+            const response = await fetch('<https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-2.7B>', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer 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',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ inputs: userMessage }),
+            });
 
-            // Simulate an AI response (replace with real API call)
-            setTimeout(() => {
-                addMessage('This is a simulated GPT-Neo response.', 'ai');
-            }, 1000);
+            const data = await response.json();
+            addMessage(data.generated_text || 'No response from the model.', 'ai');
+        } catch (error) {
+            console.error('Error:', error);
+            addMessage('Oops! Something went wrong.', 'ai');
         }
+    }
 
-        sendButton.addEventListener('click', sendMessage);
-        inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
-</body>
-</html>
+    sendButton.addEventListener('click', sendMessage);
+    inputField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
