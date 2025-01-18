@@ -1,0 +1,45 @@
+# Install required libraries
+!pip install flask flask-ngrok
+
+# Create the HTML file
+html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-Neo Chat Interface</title>
+    <style>
+        /* Your styles go here */
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <!-- Chat messages will be dynamically added here -->
+    </div>
+    <div id="input-container">
+        <input id="input-field" type="text" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+    </div>
+    <script>
+        /* Your script goes here */
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w") as file:
+    file.write(html_content)
+
+# Serve the file using Flask
+from flask import Flask, send_file
+from flask_ngrok import run_with_ngrok
+
+app = Flask(__name__)
+run_with_ngrok(app)
+
+@app.route("/")
+def serve_html():
+    return send_file("index.html")
+
+app.run()
